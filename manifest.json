@@ -1,0 +1,13 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "CineStream HD",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "CineStream HD",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "id": "om.cinestream.hd",
+  "description": "HD Movies App"
+}
