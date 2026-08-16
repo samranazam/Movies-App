@@ -3,33 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineStream HD - Movies & Series</title>
+    <title>CineStream HD</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: #111; color: white; padding-bottom: 30px; }
-        
-        header { background: #000; padding: 15px 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid #e50914; }
-        .logo { color: #e50914; font-size: 22px; font-weight: bold; }
-        .search-box { padding: 8px 15px; border-radius: 20px; border: none; outline: none; background: #222; color: white; width: 220px; }
-
-        .categories { display: flex; gap: 10px; overflow-x: auto; padding: 15px 20px; background: #181818; }
-        .cat-btn { background: #333; color: white; border: none; padding: 8px 16px; border-radius: 15px; cursor: pointer; white-space: nowrap; font-size: 13px; }
-        .cat-btn.active { background: #e50914; font-weight: bold; }
-
-        .container { padding: 20px; }
-        .section-title { font-size: 18px; margin-bottom: 15px; color: #fff; border-left: 4px solid #e50914; padding-left: 10px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-        .card { background: #222; border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; transition: 0.2s; }
-        .card:hover { transform: scale(1.04); }
-        .card img { width: 100%; height: 210px; object-fit: cover; }
-        .card-title { font-size: 13px; padding: 8px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .badge { position: absolute; top: 5px; right: 5px; background: rgba(229, 9, 20, 0.9); color: white; font-size: 10px; padding: 3px 6px; border-radius: 3px; font-weight: bold; }
-
+        body { font-family: sans-serif; background: #111; color: white; padding-bottom: 30px; }
+        header { background: #000; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e50914; }
+        .logo { color: #e50914; font-size: 20px; font-weight: bold; }
+        .search-box { padding: 8px 12px; border-radius: 20px; border: none; background: #222; color: white; }
+        .categories { display: flex; gap: 8px; overflow-x: auto; padding: 12px; background: #181818; }
+        .cat-btn { background: #333; color: white; border: none; padding: 6px 14px; border-radius: 12px; cursor: pointer; white-space: nowrap; }
+        .cat-btn.active { background: #e50914; }
+        .container { padding: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+        .card { background: #222; border-radius: 6px; overflow: hidden; cursor: pointer; text-align: center; }
+        .card img { width: 100%; height: 190px; object-fit: cover; }
+        .card-title { font-size: 12px; padding: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-box { position: relative; width: 90%; max-width: 800px; background: #000; border-radius: 8px; overflow: hidden; text-align: center; }
-        .close-btn { position: absolute; top: 5px; right: 15px; color: #fff; font-size: 30px; cursor: pointer; z-index: 1001; }
-        .server-bar { padding: 10px; background: #222; display: flex; justify-content: center; gap: 10px; }
-        .server-btn { background: #e50914; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .modal-box { position: relative; width: 95%; max-width: 800px; background: #000; border-radius: 8px; overflow: hidden; }
+        .close-btn { position: absolute; top: 5px; right: 12px; color: #fff; font-size: 28px; cursor: pointer; z-index: 1001; }
         iframe { width: 100%; height: 420px; border: none; }
     </style>
 </head>
@@ -37,31 +28,22 @@
 
     <header>
         <div class="logo">CineStream HD</div>
-        <input type="text" id="searchInput" class="search-box" placeholder="Search Hindi Dubbed, Series...">
+        <input type="text" id="searchInput" class="search-box" placeholder="Search...">
     </header>
 
     <div class="categories">
         <button class="cat-btn active" onclick="loadCategory('popular', 'Movies', this)">🔥 Popular</button>
-        <button class="cat-btn" onclick="loadHindiDubbed(this)">🇮🇳 Hindi Dubbed</button>
+        <button class="cat-btn" onclick="loadHindi(this)">🇮🇳 Hindi Dubbed</button>
         <button class="cat-btn" onclick="loadSeries(this)">📺 Web Series</button>
-        <button class="cat-btn" onclick="loadGenre(28, 'Action', this)">💥 Action</button>
-        <button class="cat-btn" onclick="loadGenre(35, 'Comedy', this)">😂 Comedy</button>
-        <button class="cat-btn" onclick="loadGenre(27, 'Horror', this)">👻 Horror</button>
     </div>
 
     <div class="container">
-        <h2 id="sectionTitle" class="section-title">Popular Movies</h2>
-        <div id="movieGrid" class="grid">Loading content...</div>
+        <div id="movieGrid" class="grid">Loading...</div>
     </div>
 
     <div id="playerModal" class="modal">
         <div class="modal-box">
             <span class="close-btn" onclick="closePlayer()">&times;</span>
-            <div class="server-bar">
-                <span>Change Server: </span>
-                <button class="server-btn" onclick="switchServer(1)">Server 1</button>
-                <button class="server-btn" onclick="switchServer(2)">Server 2</button>
-            </div>
             <iframe id="videoIframe" src="" allowfullscreen></iframe>
         </div>
     </div>
@@ -69,27 +51,18 @@
     <script>
         const API_KEY = 'c9bae2023e6063ccc07c529d9d0eeea4';
         const grid = document.getElementById('movieGrid');
-        const titleText = document.getElementById('sectionTitle');
-        let currentId = null;
-        let currentMediaType = 'movie';
 
         function renderItems(items, isSeries = false) {
             grid.innerHTML = '';
-            if(!items || items.length === 0) {
-                grid.innerHTML = '<p>No content found.</p>';
-                return;
-            }
             items.forEach(item => {
                 if(!item.poster_path) return;
                 const card = document.createElement('div');
                 card.className = 'card';
                 const name = item.title || item.name;
-                const mediaType = isSeries ? 'tv' : 'movie';
-
-                card.onclick = () => openPlayer(item.id, mediaType);
+                const type = isSeries ? 'tv' : 'movie';
+                card.onclick = () => openPlayer(item.id, type);
                 card.innerHTML = `
-                    <span class="badge">${isSeries ? 'SERIES' : 'MOVIE'}</span>
-                    <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" alt="${name}">
+                    <img src="https://image.tmdb.org/t/p/w500${item.poster_path}">
                     <div class="card-title">${name}</div>
                 `;
                 grid.appendChild(card);
@@ -104,63 +77,37 @@
         }
 
         function loadCategory(type, label, btn) {
-            setActiveBtn(btn);
-            titleText.innerText = label;
+            setActive(btn);
             fetchData(`https://api.themoviedb.org/3/movie/${type}?api_key=${API_KEY}`);
         }
 
-        function loadHindiDubbed(btn) {
-            setActiveBtn(btn);
-            titleText.innerText = 'Hindi Dubbed Content';
+        function loadHindi(btn) {
+            setActive(btn);
             fetchData(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=hi`);
         }
 
         function loadSeries(btn) {
-            setActiveBtn(btn);
-            titleText.innerText = 'Popular Web Series';
+            setActive(btn);
             fetchData(`https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}`, true);
         }
 
-        function loadGenre(genreId, label, btn) {
-            setActiveBtn(btn);
-            titleText.innerText = `${label} Movies`;
-            fetchData(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genreId}`);
-        }
-
-        function setActiveBtn(btn) {
+        function setActive(btn) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
         }
 
         document.getElementById('searchInput').addEventListener('keyup', (e) => {
-            const query = e.target.value.trim();
-            if(query.length > 2) {
-                titleText.innerText = `Search Results for: "${query}"`;
-                fetchData(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`);
-            } else if(query.length === 0) {
-                loadCategory('popular', 'Popular Movies');
+            if(e.target.value.length > 2) {
+                fetchData(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${e.target.value}`);
             }
         });
 
         function openPlayer(id, type) {
-            currentId = id;
-            currentMediaType = type;
-            switchServer(1);
-            document.getElementById('playerModal').style.display = 'flex';
-        }
-
-        function switchServer(serverNum) {
-            let embedUrl = '';
-            if(serverNum === 1) {
-                embedUrl = currentMediaType === 'tv' 
-                    ? `https://vidsrc.me/embed/tv?tmdb=${currentId}&season=1&episode=1`
-                    : `https://vidsrc.me/embed/movie?tmdb=${currentId}`;
-            } else {
-                embedUrl = currentMediaType === 'tv' 
-                    ? `https://autoembed.co/tv/tmdb/${currentId}-1-1`
-                    : `https://autoembed.co/movie/tmdb/${currentId}`;
-            }
+            const embedUrl = type === 'tv' 
+                ? `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=1&e=1`
+                : `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1`;
             document.getElementById('videoIframe').src = embedUrl;
+            document.getElementById('playerModal').style.display = 'flex';
         }
 
         function closePlayer() {
@@ -168,7 +115,7 @@
             document.getElementById('videoIframe').src = '';
         }
 
-        loadCategory('popular', 'Popular Movies');
+        loadCategory('popular', 'Popular', null);
     </script>
 </body>
 </html>
